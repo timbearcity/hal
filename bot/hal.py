@@ -22,6 +22,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 
+# Events
 @bot.event
 async def on_ready():
     print("Logged in as {0.user}".format(bot))
