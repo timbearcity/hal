@@ -1,5 +1,6 @@
 import logging
 from logging import handlers
+import os
 import re
 
 import discord
@@ -25,4 +26,4 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print("Logged in as {0.user}".format(bot))
 
-bot.run(os.getenv("DISCORD_TOKEN"))
+bot.run(os.getenv('HAL_DISCORD_TOKEN'))
