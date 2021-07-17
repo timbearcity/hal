@@ -26,4 +26,13 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print("Logged in as {0.user}".format(bot))
 
+
+@bot.event
+async def on_message(message):
+    if bot.user in message.mentions:
+        await message.add_reaction('🍺')
+
+    await bot.process_commands(message)
+
+
 bot.run(os.getenv('HAL_DISCORD_TOKEN'))
