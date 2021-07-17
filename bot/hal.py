@@ -35,4 +35,12 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+# Commands
+@bot.command(aliases=['role'], description="Returns all your roles.")
+async def roles(ctx):
+    roles = [role.name for role in ctx.author.roles[1:]]
+    roles = ', '.join(roles)
+    await ctx.send(f"> {ctx.message.author.mention} - {roles}")
+
+
 bot.run(os.getenv('HAL_DISCORD_TOKEN'))
