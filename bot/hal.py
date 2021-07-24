@@ -3,6 +3,7 @@ from logging import handlers
 import os
 from random import randint
 import re
+import sqlite3
 
 import discord
 from discord.ext import commands
@@ -24,10 +25,22 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 
+# Connection to database
+conn = sqlite3.connect('sqlite3.db')
+c = conn.cursor()
+
+
 # Events
 @bot.event
 async def on_ready():
     print("Logged in as {0.user}".format(bot))
+    c.execute("SELECT userid FROM users")
+    res = c.fetchall()
+    for guild in bot.guilds:
+        for member in guild.members:
+            if member.id not in res:
+                c.execute("INSERT INTO users(userid) VALUES(?)", (member.id,))
+                conn.commit()
 
 
 @bot.event
