@@ -44,17 +44,17 @@ async def on_ready():
                 conn.commit()
 
 
+# Experience system
 @bot.event
 async def on_message(message):
-    # Members get 1 experience point per message
+    """Members get 1 experience point per message they send."""
     if not message.author.bot:
         c.execute("UPDATE members SET experience = experience + 1 WHERE userid = ?", (message.author.id,))
         conn.commit()
-
     await bot.process_commands(message)
 
 
-# Commands
+# Miscellaneous commands
 @bot.command(aliases=['role'], description="Returns all your roles.")
 async def roles(ctx):
     roles = [role.name for role in ctx.author.roles[1:]]
