@@ -45,6 +45,19 @@ async def on_ready():
 
 
 # Experience system
+def get_level(exp):
+    if exp < 50:
+        return 1
+    elif exp < 100:
+        return 2
+    elif exp < 300:
+        return 3
+    elif exp < 500:
+        return 4
+    elif exp < 1000:
+        return 5
+
+
 @bot.event
 async def on_message(message):
     """Members get 1 experience point per message they send."""
@@ -52,6 +65,14 @@ async def on_message(message):
         c.execute("UPDATE members SET experience = experience + 1 WHERE userid = ?", (message.author.id,))
         conn.commit()
     await bot.process_commands(message)
+
+
+@bot.command(aliases=['experience', 'exp', 'xp'], description="Returns your current level and experience points.")
+async def level(ctx):
+    c.execute("SELECT experience FROM members WHERE userid = ? AND guildid = ?", (ctx.author.id, ctx.guild.id))
+    exp = c.fetchone()[0]
+    lvl = get_level(exp)
+    await ctx.send(f"{ctx.author.mention}\nLevel: {lvl}\nExperience: {exp}")
 
 
 # Miscellaneous commands
