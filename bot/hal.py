@@ -1,10 +1,12 @@
 import logging
 from logging import handlers
 import os
+from random import randint
 import re
 
 import discord
 from discord.ext import commands
+import wikipedia
 
 
 # Logging
@@ -42,6 +44,22 @@ async def roles(ctx):
     roles = [role.name for role in ctx.author.roles[1:]]
     roles = ', '.join(roles)
     await ctx.send(f"> {ctx.message.author.mention} - {roles}")
+
+
+@bot.command(aliases=['wc'], description="Returns the requested Wikipedia article. If the keyword is followed by a number it will return another article that many random links deep from the origin article.")
+async def wikiception(ctx, *args):
+    args = list(args)
+    depth = 0
+    if args[-1].isdigit():
+        depth = int(args.pop())
+    title = wikipedia.search(' '.join(args), results=1, suggestion=False)[0]
+    article = wikipedia.page(title=title, auto_suggest=False)
+    results = [article.title]
+    if depth > 0:
+        for _ in range(depth):
+            article = wikipedia.page(article.links[randint(0, len(article.links)-1)])
+            results.append(article.title)
+    await ctx.send(f"{' > '.join(results)}\n{article.url}")
 
 
 bot.run(os.getenv('HAL_DISCORD_TOKEN'))
