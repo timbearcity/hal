@@ -25,7 +25,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 
-# CREATE TABLE members (userid INTEGER NOT NULL, guildid INTEGER NOT NULL, experience INTEGER DEFAULT 0, currency INTEGER DEFAULT 0);
+# CREATE TABLE members(id INTEGER PRIMARY KEY, userid INTEGER NOT NULL, guildid INTEGER NOT NULL, experience INTEGER DEFAULT 0, currency INTEGER DEFAULT 0);
 # Connection to database
 conn = sqlite3.connect('sqlite3.db')
 c = conn.cursor()
