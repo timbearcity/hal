@@ -76,13 +76,6 @@ async def level(ctx):
 
 
 # Miscellaneous commands
-@bot.command(aliases=['role'], description="Returns all your roles.")
-async def roles(ctx):
-    roles = [role.name for role in ctx.author.roles[1:]]
-    roles = ', '.join(roles)
-    await ctx.send(f"> {ctx.message.author.mention} - {roles}")
-
-
 @bot.command(aliases=['wc'], description="Returns the requested Wikipedia article. If the keyword is followed by a number it will return another article that many random links deep from the origin article.")
 async def wikiception(ctx, *args):
     args = list(args)
