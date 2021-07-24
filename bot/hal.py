@@ -25,7 +25,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 
-# CREATE TABLE members (userid INTEGER PRIMARY KEY, guildid INTEGER NOT NULL, experience INTEGER DEFAULT 0, currency INTEGER DEFAULT 0); 
+# CREATE TABLE members (userid INTEGER NOT NULL, guildid INTEGER NOT NULL, experience INTEGER DEFAULT 0, currency INTEGER DEFAULT 0);
 # Connection to database
 conn = sqlite3.connect('sqlite3.db')
 c = conn.cursor()
@@ -50,12 +50,22 @@ def get_level(exp):
         return 1
     elif exp < 100:
         return 2
-    elif exp < 300:
+    elif exp < 200:
         return 3
-    elif exp < 500:
+    elif exp < 300:
         return 4
-    elif exp < 1000:
+    elif exp < 400:
         return 5
+    elif exp < 500:
+        return 6
+    elif exp < 1000:
+        return 7
+    elif exp < 3000:
+        return 8
+    elif exp < 5000:
+        return 9
+    elif exp < 10000:
+        return 10
 
 
 @bot.event
@@ -87,7 +97,7 @@ async def wikiception(ctx, *args):
     results = [article.title]
     if depth > 0:
         for _ in range(depth):
-            article = wikipedia.page(article.links[randint(0, len(article.links)-1)])
+            article = wikipedia.page(title=article.links[randint(0, len(article.links)-1)], auto_suggest=False)
             results.append(article.title)
     await ctx.send(f"{' > '.join(results)}\n{article.url}")
 
