@@ -25,6 +25,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 
+# CREATE TABLE members (userid INTEGER PRIMARY KEY, guildid INTEGER NOT NULL, experience INTEGER DEFAULT 0, currency INTEGER DEFAULT 0); 
 # Connection to database
 conn = sqlite3.connect('sqlite3.db')
 c = conn.cursor()
@@ -34,19 +35,21 @@ c = conn.cursor()
 @bot.event
 async def on_ready():
     print("Logged in as {0.user}".format(bot))
-    c.execute("SELECT userid FROM users")
+    c.execute("SELECT userid, guildid FROM members")
     res = c.fetchall()
     for guild in bot.guilds:
         for member in guild.members:
-            if member.id not in res:
-                c.execute("INSERT INTO users(userid) VALUES(?)", (member.id,))
+            if (member.id, guild.id) not in res and not member.bot:
+                c.execute("INSERT INTO members(userid, guildid) VALUES(?,?)", (member.id, guild.id))
                 conn.commit()
 
 
 @bot.event
 async def on_message(message):
-    if bot.user in message.mentions:
-        await message.add_reaction('🍺')
+    # Members get 1 experience point per message
+    if not message.author.bot:
+        c.execute("UPDATE members SET experience = experience + 1 WHERE userid = ?", (message.author.id,))
+        conn.commit()
 
     await bot.process_commands(message)
 
