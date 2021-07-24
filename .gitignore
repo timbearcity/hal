@@ -1,7 +1,7 @@
 *.py[cod]
 __pycache__/
 .venv/
-*.log
+*.log*
 htmlcov/
 .vscode/
 sqlite3.db
